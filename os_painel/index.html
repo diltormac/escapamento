@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>Painel de Ordens de Serviço · Clínica da Roda</title>
+
+    <script>
+      (function marcarWindows() {
+        const ua = navigator.userAgent || "";
+        const platform =
+          navigator.userAgentData?.platform || navigator.platform || "";
+        if (/windows/i.test(ua) || /win/i.test(platform)) {
+          document.documentElement.classList.add("os-windows");
+        }
+      })();
+    </script>
+
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icone.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/apple-touch-icon.png"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/painel.css" />
+    <style>
+      html.os-windows [data-ocultar-windows="true"] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <div id="headerSlot" style="display: none"></div>
+      <div id="sidebarSlot"></div>
+
+      <main>
+        <div id="kpisSlot"></div>
+
+        <section class="filter-bar">
+          <input
+            id="fBusca"
+            type="search"
+            placeholder="Buscar por cliente, telefone, placa, documento, serviço ou aparelho…"
+          />
+          <select id="fServico" aria-label="Tipo de serviço">
+            <option value="">Todos os serviços</option>
+          </select>
+          <input
+            id="fDataInicial"
+            type="date"
+            aria-label="Data inicial"
+            title="Data inicial"
+          />
+          <input
+            id="fDataFinal"
+            type="date"
+            aria-label="Data final"
+            title="Data final"
+          />
+          <button id="btnLimparFiltros" class="btn" type="button">
+            Limpar
+          </button>
+        </section>
+
+        <div id="boxPrimeiroAcesso" class="empty-box" style="display: none">
+          <p>
+            Este aparelho ainda não possui dados locais no
+            <strong>OsPainelDB</strong>.
+          </p>
+          <p style="font-size: 12.5px; color: var(--muted); margin-top: 6px">
+            Escolha como deseja carregar as Ordens de Serviço neste dispositivo:
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              justify-content: center;
+              flex-wrap: wrap;
+              margin-top: 14px;
+            "
+          >
+            <button
+              id="btnInicialSupabase"
+              class="btn btn-primary"
+              type="button"
+            >
+              ⬇ Baixar do Supabase
+            </button>
+            <button id="btnInicialRestaurar" class="btn" type="button">
+              ⬆ Restaurar arquivo (.json)
+            </button>
+          </div>
+        </div>
+
+        <section class="cards-grid" id="cards"></section>
+      </main>
+    </div>
+
+    <div
+      class="modal-backdrop"
+      id="modalOverlay"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-box" id="modalConteudo"></div>
+    </div>
+
+    <div
+      class="lightbox-backdrop"
+      id="lightboxOverlay"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="lightbox-box">
+        <div class="lightbox-top">
+          <span id="lightboxLegenda" class="mono"></span>
+          <button
+            class="btn-close"
+            id="btnLightboxFechar"
+            type="button"
+            aria-label="Fechar foto"
+          >
+            ×
+          </button>
+        </div>
+        <div class="lightbox-stage">
+          <button
+            class="btn lightbox-nav"
+            id="btnLightboxPrev"
+            type="button"
+            aria-label="Foto anterior"
+          >
+            ‹
+          </button>
+          <img id="lightboxImg" src="" alt="Visualização ampliada da foto" />
+          <button
+            class="btn lightbox-nav"
+            id="btnLightboxNext"
+            type="button"
+            aria-label="Próxima foto"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="./js/painel.js"></script>
+    <script type="module">
+      function marcarBotoesCadastroOS() {
+        document.querySelectorAll("a, button").forEach((el) => {
+          const texto = (el.textContent || "").replace(/\s+/g, " ").trim();
+          if (texto.includes("Cadastro de OS")) {
+            el.setAttribute("data-ocultar-windows", "true");
+          }
+        });
+      }
+
+      marcarBotoesCadastroOS();
+      new MutationObserver(marcarBotoesCadastroOS).observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./service-worker.js")
+            .then((reg) => {
+              reg.update();
+            })
+            .catch((error) => {
+              console.error("Falha ao registrar PWA:", error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

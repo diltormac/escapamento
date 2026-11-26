@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#080f1d" />
+    <title>OS Fácil | Pré-Cadastro</title>
+
+    <!-- PWA / Instalável -->
+    <link rel="manifest" href="./manifest.json" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./apple-touch-icon.png"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <style>
+      :root {
+        --bg: #080f1d;
+        --panel: #111b2d;
+        --line: #34435f;
+        --text: #f4f7fc;
+        --yellow: #ffc400;
+        --green: #4ade80;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #050b14;
+        color: var(--text);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Arial,
+          sans-serif;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 540px;
+        min-height: 100vh;
+        padding: 0 20px 28px;
+        background:
+          radial-gradient(
+            ellipse at 80% 20%,
+            rgba(42, 65, 105, 0.18),
+            transparent 42%
+          ),
+          linear-gradient(160deg, #0b1424 0%, var(--bg) 58%, #0a1424 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-base {
+        height: 100%;
+        width: 100%;
+        min-width: 0;
+        border: 1.5px solid #435675;
+        border-radius: 15px;
+        background: linear-gradient(145deg, #17243a, #101a2c);
+        color: #edf2fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+        padding: 0 8px;
+        overflow: hidden;
+      }
+      .btn-base.primary {
+        border: 2px solid var(--yellow);
+      }
+      .btn-base.filled {
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .btn-base svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .btn-base span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .actions-wrapper {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        position: relative;
+        height: 68px;
+        width: 100%;
+        min-width: 0;
+      }
+      .component-slot {
+        flex: 1 1 0;
+        min-width: 0;
+        position: static !important;
+      }
+
+      .obs-container {
+        display: flex;
+        align-items: flex-start;
+        min-height: 105px;
+        padding: 15px 20px;
+        margin-bottom: 16px;
+        border: 1.5px solid var(--line);
+        border-radius: 17px;
+        background: var(--panel);
+      }
+      .obs-container textarea {
+        width: 100%;
+        min-height: 70px;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+        resize: vertical;
+        font-family: inherit;
+        text-transform: uppercase;
+      }
+      .obs-container textarea::placeholder {
+        color: #8797b3;
+        text-transform: none;
+      }
+
+      .submit-btn {
+        width: 100%;
+        height: 66px;
+        border-radius: 17px;
+        border: 0;
+        background: linear-gradient(100deg, #ffd21a, #ffbd00);
+        color: #101827;
+        font-weight: 900;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .submit-btn:active {
+        transform: scale(0.98);
+      }
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      @media (min-width: 700px) {
+        body {
+          padding: 24px 0;
+        }
+        .app {
+          min-height: 0;
+          border: 1px solid #26354d;
+          border-radius: 24px;
+          box-shadow: 0 24px 80px #0009;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <div id="header-container"></div>
+
+      <form id="osForm">
+        <div id="customer-info-container"></div>
+
+        <div class="actions-wrapper">
+          <div class="component-slot" id="cpf-slot"></div>
+          <div class="component-slot">
+            <button
+              class="btn-base primary"
+              type="button"
+              id="btn-abrir-servico"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+                />
+              </svg>
+              <span id="servico-label">Serviços</span>
+            </button>
+          </div>
+          <div class="component-slot" id="placa-slot"></div>
+        </div>
+
+        <label class="obs-container">
+          <textarea
+            id="obs"
+            placeholder="Observações (opcional)..."
+            maxlength="250"
+          ></textarea>
+        </label>
+
+        <div id="upload-container"></div>
+
+        <button type="submit" class="submit-btn">Enviar Pré-Cadastro</button>
+      </form>
+    </main>
+
+    <div id="sheet-container"></div>
+
+    <script src="js/supabase_sdk.js"></script>
+
+    <script src="components/custom-alert.js"></script>
+    <script src="components/device-id.js"></script>
+    <script src="components/header.js"></script>
+    <script src="components/customer-info.js"></script>
+    <script src="components/morph-input-cpf.js"></script>
+
+    <script type="module" src="components/morph-input-placa.js"></script>
+    <script type="module" src="components/service-sheet.js"></script>
+    <script type="module" src="components/image-upload.js"></script>
+
+    <script type="module">
+      import { osRepository } from "./js/os-repository.js";
+      import { osSync } from "./js/os-sync.js";
+
+      AppHeader.init("header-container");
+      CustomerInfo.init("customer-info-container");
+      MorphInputCPF.init("cpf-slot");
+      MorphInputPlaca.init("placa-slot");
+      ServiceSheet.init(
+        "sheet-container",
+        "btn-abrir-servico",
+        "servico-label",
+      );
+      ImageUpload.init("upload-container");
+
+      const dados = {
+        nome: "",
+        telefone: "",
+        telefoneFormatado: "",
+        pais: "BR",
+        cpf: "",
+        placa: "",
+        servicos: [],
+        fotos: [],
+      };
+
+      document.addEventListener("customer-info-change", (e) => {
+        dados.nome = e.detail.nome;
+        dados.telefone = e.detail.telefone;
+        dados.telefoneFormatado = e.detail.telefoneFormatado;
+        dados.pais = e.detail.pais;
+      });
+      document.addEventListener("morph-cpf-change", (e) => {
+        dados.cpf = e.detail;
+      });
+      document.addEventListener("morph-placa-change", (e) => {
+        dados.placa = e.detail;
+      });
+      document.addEventListener("services-change", (e) => {
+        dados.servicos = e.detail;
+      });
+      document.addEventListener("images-change", (e) => {
+        dados.fotos = e.detail;
+      });
+
+      document
+        .getElementById("osForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          if (dados.servicos.length === 0) {
+            window.CustomAlert.show(
+              "Por favor, selecione pelo menos 1 serviço.",
+              "erro",
+            );
+            return;
+          }
+          if (dados.fotos.length === 0) {
+            window.CustomAlert.show(
+              "Por favor, adicione pelo menos 1 foto.",
+              "erro",
+            );
+            return;
+          }
+          if (
+            dados.telefone &&
+            dados.telefone.length > 0 &&
+            dados.telefone.length < 12
+          ) {
+            window.CustomAlert.show(
+              "Informe um telefone válido com DDD ou deixe em branco.",
+              "erro",
+            );
+            document.getElementById("ci-telefone").focus();
+            return;
+          }
+
+          // ✅ VALIDAÇÃO: Cor obrigatória para REFORMA
+          const reformaSemCor = dados.servicos.find(
+            (s) =>
+              (s.nome || "").toUpperCase().trim() === "REFORMA" &&
+              !(s.cor && s.cor.trim()),
+          );
+          if (reformaSemCor) {
+            window.CustomAlert.show(
+              "Preencha a cor da roda em todos os serviços REFORMA.",
+              "erro",
+              "Cor obrigatória",
+            );
+            return;
+          }
+
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Salvando...";
+
+          try {
+            const nomeFinal =
+              dados.nome && dados.nome.trim() !== ""
+                ? dados.nome.trim()
+                : "CONSUMIDOR";
+
+            await osRepository.salvar({
+              nome: nomeFinal,
+              telefone: dados.telefone,
+              telefoneFormatado: dados.telefoneFormatado,
+              pais: dados.pais,
+              cpf: dados.cpf,
+              placa: dados.placa,
+              observacao: document.getElementById("obs").value,
+              servicos: dados.servicos,
+              fotos: dados.fotos,
+              aparelho: DeviceId.get(),
+            });
+
+            if (navigator.onLine) osSync.enviarPendentes();
+
+            window.CustomAlert.show(
+              navigator.onLine
+                ? "Pré-cadastro salvo! Sincronizando..."
+                : "Sem internet. Salvo localmente.",
+              "sucesso",
+            );
+
+            // Limpeza
+            e.target.reset();
+            dados.nome = "";
+            dados.telefone = "";
+            dados.telefoneFormatado = "";
+            dados.pais = "BR";
+            dados.cpf = "";
+            dados.placa = "";
+            dados.servicos = [];
+            dados.fotos = [];
+
+            document.getElementById("customer-info-container").innerHTML = "";
+            CustomerInfo.init("customer-info-container");
+            document.getElementById("cpf-slot").innerHTML = "";
+            MorphInputCPF.init("cpf-slot");
+            document.getElementById("placa-slot").innerHTML = "";
+            MorphInputPlaca.init("placa-slot");
+            document.getElementById("upload-container").innerHTML = "";
+            ImageUpload.init("upload-container");
+
+            document.getElementById("servico-label").textContent = "Serviços";
+            document
+              .getElementById("btn-abrir-servico")
+              .classList.remove("filled");
+
+            if (window.ServiceSheet && window.ServiceSheet.limpar)
+              window.ServiceSheet.limpar();
+          } catch (err) {
+            console.error("Erro ao salvar pré-cadastro:", err);
+            window.CustomAlert.show(
+              "Erro ao salvar: " + (err.message || err),
+              "erro",
+            );
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Enviar Pré-Cadastro";
+          }
+        });
+
+      window.addEventListener("online", () => osSync.enviarPendentes());
+      if (navigator.onLine) osSync.enviarPendentes();
+    </script>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", async () => {
+          try {
+            const reg = await navigator.serviceWorker.register(
+              "./service-worker.js",
+              { updateViaCache: "none" },
+            );
+
+            reg.update();
+            setInterval(() => reg.update(), 30 * 1000);
+
+            document.addEventListener("visibilitychange", () => {
+              if (document.visibilityState === "visible") reg.update();
+            });
+
+            function avisarAtualizacao(worker) {
+              if (!window.CustomAlert) {
+                if (confirm("Nova versão disponível. Recarregar agora?")) {
+                  worker.postMessage({ type: "SKIP_WAITING" });
+                }
+                return;
+              }
+
+              window.CustomAlert.show(
+                "Uma nova versão foi baixada. Deseja atualizar o aplicativo agora?",
+                "info",
+                "Nova Atualização",
+                () => {
+                  worker.postMessage({ type: "SKIP_WAITING" });
+                },
+              );
+            }
+
+            reg.addEventListener("updatefound", () => {
+              const newWorker = reg.installing;
+              if (newWorker) {
+                newWorker.addEventListener("statechange", () => {
+                  if (
+                    newWorker.state === "installed" &&
+                    navigator.serviceWorker.controller
+                  ) {
+                    avisarAtualizacao(newWorker);
+                  }
+                });
+              }
+            });
+
+            let recarregando = false;
+            navigator.serviceWorker.addEventListener("controllerchange", () => {
+              if (recarregando) return;
+              recarregando = true;
+              window.location.reload();
+            });
+          } catch (error) {
+            console.error("Falha ao registrar PWA:", error);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

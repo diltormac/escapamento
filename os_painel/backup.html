@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transferir Banco Offline · Clínica da Roda</title>
+    <style>
+      :root {
+        --bg: #090b10;
+        --card: rgba(255, 255, 255, 0.04);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --accent: #10b981;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .box {
+        width: 100%;
+        max-width: 520px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 26px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 20px;
+      }
+
+      p {
+        margin: 0 0 18px;
+        font-size: 13.5px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .pill {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        font-size: 13px;
+        margin-bottom: 18px;
+      }
+
+      .actions {
+        display: grid;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 12px 16px;
+        border-radius: 11px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        border: none;
+        color: #03150e;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin-top: 16px;
+        font-size: 13px;
+        min-height: 20px;
+        color: var(--accent);
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .back-link:hover {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>Transferir Banco Offline (OsPainelDB)</h1>
+      <p>
+        Exporte as Ordens de Serviço e fotos salvas deste aparelho para um
+        arquivo e importe no celular sem precisar baixar tudo novamente do
+        Supabase.
+      </p>
+
+      <div class="pill" id="resumoLocal">Lendo OsPainelDB…</div>
+
+      <div class="actions">
+        <button id="btnExportar" class="btn btn-primary" type="button">
+          ⬇ Exportar Banco para Arquivo (.json)
+        </button>
+        <button id="btnImportar" class="btn" type="button">
+          ⬆ Importar Arquivo para este Aparelho
+        </button>
+        <input
+          id="inputArquivo"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        />
+      </div>
+
+      <div class="status" id="statusBox"></div>
+
+      <a class="back-link" href="./painel.html">← Voltar para o Painel de OS</a>
+    </div>
+
+    <script type="module" src="./js/backup.js"></script>
+  </body>
+</html>
